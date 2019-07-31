@@ -1,0 +1,31 @@
+<!DOCTYPE	html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+<body>
+	<h1 layout:fragment="header">
+		XPTO Games <small>Esqueci Minha Senha</small>
+	</h1>
+
+	<div layout:fragment="content" class="container">
+
+		<form action="#" th:action="@{/(formEsqueciMinhaSenha)}" th:object="${usuario}" method="post">
+
+			<div class="alert	alert-success" th:if="${globalMessageSucess}" th:text="${globalMessageSucess}">mensagem</div>
+
+			<div class="alert	alert-danger" th:if="${globalMessageError}" th:text="${globalMessageError}">mensagem</div>
+
+			<div class="form-group">
+				<label for="cpf">CPF</label> <input type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF" required="required" th:field="*{cpf}" />
+			</div>
+
+			<button type="submit" class="btn btn-success">Enviar</button>
+		</form>
+
+	</div>
+</body>
+
+
+</html>

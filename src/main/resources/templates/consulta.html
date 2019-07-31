@@ -1,0 +1,42 @@
+<!DOCTYPE	html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+<body>
+	<h1 layout:fragment="header">
+		XPTO Games <small>Lista de Usuários</small>
+	</h1>
+
+	<div layout:fragment="content" class="container">
+
+		<div id="listaDeUsuarios">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>CPF</th>
+						<th>Email</th>
+						<th>Telefone</th>
+
+					</tr>
+				</thead>
+				<tr th:each="usuario : ${usuarios}">
+
+					<td><span th:text="${usuario.nome}"></span></td>
+					<td><span th:text="${usuario.cpf}"></span></td>
+					<td><span th:text="${usuario.email}"></span></td>
+					<td><span th:text="${usuario.telefone}"></span></td>
+
+				</tr>
+
+			</table>
+		</div>
+	</div>
+
+
+</body>
+
+
+</html>
