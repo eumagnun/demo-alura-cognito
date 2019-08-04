@@ -1,6 +1,6 @@
-package br.com.xptogames.model;
+package br.com.aluragames.model;
 
-public class ForgotPasswordConfirm {
+public class ConfirmarEsqueciSenha {
 	
 	private String confirmationCode;
 	private String username;

@@ -1,6 +1,6 @@
-package br.com.xptogames.model;
+package br.com.aluragames.model;
 
-public class UserWSResponse {
+public class DefaultResponse {
 	
 	private int status;
 	private Usuario user;

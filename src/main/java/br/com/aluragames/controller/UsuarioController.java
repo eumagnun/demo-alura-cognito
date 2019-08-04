@@ -1,4 +1,4 @@
-package br.com.xptogames.controller;
+package br.com.aluragames.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -15,44 +15,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.xptogames.integration.CadastrarUsuario;
-import br.com.xptogames.integration.ConfirmarCadastroUsuario;
-import br.com.xptogames.integration.ConfirmarEsqueciSenhaUsuario;
-import br.com.xptogames.integration.EsqueciSenhaUsuario;
-import br.com.xptogames.integration.ListarUsuario;
-import br.com.xptogames.integration.LogarUsuario;
-import br.com.xptogames.integration.TrocarSenhaUsuario;
-import br.com.xptogames.model.UserWSResponse;
-import br.com.xptogames.model.Usuario;
-
+import br.com.aluragames.integration.CadastrarUsuario;
+import br.com.aluragames.integration.ConfirmarCadastroUsuario;
+import br.com.aluragames.integration.ListarUsuario;
+import br.com.aluragames.integration.LogarUsuario;
+import br.com.aluragames.model.DefaultResponse;
+import br.com.aluragames.model.Usuario;
 
 @Controller
 @RequestMapping("/")
 public class UsuarioController {
-	
-	
+
 	@Autowired
 	private LogarUsuario logarUsuario;
-	
+
 	@Autowired
 	private CadastrarUsuario cadasUsuarioAction;
-	
-	
+
 	@Autowired
 	private ConfirmarCadastroUsuario confirmarCadastroUsuario;
-	
-	
-	@Autowired
-	private EsqueciSenhaUsuario esqueciSenhaUsuario;
-	
-	@Autowired
-	private ConfirmarEsqueciSenhaUsuario confirmarEsqueciSenhaUsuario;
-	
+
 	@Autowired
 	private ListarUsuario listarUsuario;
-	
-	@Autowired
-	private TrocarSenhaUsuario trocarSenhaUsuario;
 
 	// inject via application.properties
 	@Value("${welcome.message:test}")
@@ -84,7 +68,7 @@ public class UsuarioController {
 
 	@GetMapping("/consulta")
 	public ModelAndView usuarioLista() {
-		List<Usuario> usuarios = this.listarUsuario.listAll();
+		List<Usuario> usuarios = this.listarUsuario.execute();
 		return new ModelAndView("consulta", "usuarios", usuarios);
 	}
 
@@ -107,10 +91,10 @@ public class UsuarioController {
 			if (result.hasErrors()) {
 				return new ModelAndView("form", "formErrors", result.getAllErrors());
 			}
-			UserWSResponse userWSResponse = this.logarUsuario.login(usuario);
+			DefaultResponse defaultResponse = this.logarUsuario.execute(usuario);
 
-			tratarMensagemRetornoWs(redirect, userWSResponse);
-			
+			tratarMensagemRetornoWs(redirect, defaultResponse);
+
 			return new ModelAndView("redirect:/consulta");
 
 		} catch (Exception e) {
@@ -118,47 +102,6 @@ public class UsuarioController {
 			return new ModelAndView("redirect:/login");
 		}
 
-		
-	}
-
-	@PostMapping(params = "formEsqueciMinhaSenha")
-	public ModelAndView esqueciMinhaSenha(@Valid Usuario usuario, BindingResult result, RedirectAttributes redirect) {
-		try {
-			if (result.hasErrors()) {
-				return new ModelAndView("formEsqueciMinhaSenha", "formErrors", result.getAllErrors());
-			}
-			UserWSResponse userWSResponse = this.esqueciSenhaUsuario.forgotPassword(usuario.getCpf());
-
-			tratarMensagemRetornoWs(redirect, userWSResponse);
-			return new ModelAndView("redirect:/confirmarNovaSenha");
-		} catch (Exception e) {
-			redirect.addFlashAttribute("globalMessageError", "Ocorreu um erro: " + e.getMessage());
-			return new ModelAndView("redirect:/formEsqueciMinhaSenha");
-		}
-
-
-	}
-
-	@PostMapping(params = "formConfirmarNovaSenha")
-	public ModelAndView formConfirmarNovaSenha(@Valid Usuario usuario, BindingResult result,
-			RedirectAttributes redirect) {
-
-		try {
-
-			if (result.hasErrors()) {
-				return new ModelAndView("formConfirmarNovaSenha", "formErrors", result.getAllErrors());
-			}
-			UserWSResponse userWSResponse = this.confirmarEsqueciSenhaUsuario.confirmForgotPassword(usuario);
-
-			tratarMensagemRetornoWs(redirect, userWSResponse);
-			
-			return new ModelAndView("redirect:/login");
-
-		} catch (Exception e) {
-			redirect.addFlashAttribute("globalMessageError", "Ocorreu um erro: " + e.getMessage());
-			return new ModelAndView("redirect:/confirmarNovaSenha");
-		}
-		
 	}
 
 	@PostMapping(params = "formNovoCadastro")
@@ -169,10 +112,10 @@ public class UsuarioController {
 			if (result.hasErrors()) {
 				return new ModelAndView("formNovoCadastro", "formErrors", result.getAllErrors());
 			}
-			UserWSResponse userWSResponse = this.cadasUsuarioAction.create(usuario);
+			DefaultResponse defaultResponse = this.cadasUsuarioAction.execute(usuario);
 
-			tratarMensagemRetornoWs(redirect, userWSResponse);
-			
+			tratarMensagemRetornoWs(redirect, defaultResponse);
+
 			return new ModelAndView("redirect:/confirmarCadastro");
 
 		} catch (Exception e) {
@@ -191,28 +134,27 @@ public class UsuarioController {
 			if (result.hasErrors()) {
 				return new ModelAndView("formConfirmarCadastro", "formErrors", result.getAllErrors());
 			}
-			UserWSResponse userWSResponse = this.confirmarCadastroUsuario.confirmSignUp(usuario);
+			DefaultResponse defaultResponse = this.confirmarCadastroUsuario.execute(usuario);
 
-			tratarMensagemRetornoWs(redirect, userWSResponse);
-			
+			tratarMensagemRetornoWs(redirect, defaultResponse);
+
 			return new ModelAndView("redirect:/login");
 
 		} catch (Exception e) {
 			redirect.addFlashAttribute("globalMessageError", "Ocorreu um erro: " + e.getMessage());
-			
+
 			return new ModelAndView("redirect:/confirmarCadastro");
 		}
-	
+
 	}
 
-
-	private void tratarMensagemRetornoWs(RedirectAttributes redirect, UserWSResponse userWSResponse) {
-		if (userWSResponse.getStatus() != 1) {
+	private void tratarMensagemRetornoWs(RedirectAttributes redirect, DefaultResponse defaultResponse) {
+		if (defaultResponse.getStatus() != 0) {
 			redirect.addFlashAttribute("globalMessageError",
-					userWSResponse.getMessage() + " - Status=" + userWSResponse.getStatus());
+					defaultResponse.getMessage() + " - Status=" + defaultResponse.getStatus());
 		} else {
 			redirect.addFlashAttribute("globalMessageSucess",
-					userWSResponse.getMessage() + " - Status=" + userWSResponse.getStatus());
+					defaultResponse.getMessage() + " - Status=" + defaultResponse.getStatus());
 		}
 	}
 

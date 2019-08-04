@@ -1,12 +1,12 @@
-package br.com.xptogames;
+package br.com.aluragames;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class XptoGamesApplication {
+public class AluraGamesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(XptoGamesApplication.class, args);
+		SpringApplication.run(AluraGamesApplication.class, args);
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.xptogames.model;
+package br.com.aluragames.model;
 
 public class Usuario {
 

@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1 layout:fragment="header">
-		XPTO Games <small>Cadastro</small>
+		Alura Games <small>Cadastro</small>
 	</h1>
 
 	<div layout:fragment="content" class="container">
@@ -27,10 +27,6 @@
 
 			<div class="form-group">
 				<label for="email">E-mail</label> <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:field="*{email}" />
-			</div>
-			
-			<div class="form-group">
-				<label for="telefone">Telefone</label> <input type="number" class="form-control" id=telefone name="telefone" placeholder="Telefone" required="required" th:field="*{telefone}" />
 			</div>
 
 			<button type="submit" class="btn btn-success">Enviar</button>
